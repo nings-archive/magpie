@@ -15,13 +15,13 @@ PATH = sys.path[0] + '/'
 PATH_CONFIG_JSON = PATH + 'config.json'
 CHANNEL_ID_QUERY = '{"ok":false,"error_code":401,"description":"Unauthorized"}'
 
-# config.json
+# CONFIG.JSON
 if not os.path.isfile(PATH_CONFIG_JSON):
     with open(PATH_CONFIG_JSON, 'w') as file:
         json.dump(
             {"accounts":
                 {"telegram_bot_token":"",
-                 "telegram_channel_name":"",
+                 "telegram_channel_public_link":"",
                  "telegram_channel_id":""},
              "services":
                 {"site":"",
@@ -31,17 +31,25 @@ if not os.path.isfile(PATH_CONFIG_JSON):
         )
 with open(PATH_CONFIG_JSON, 'r') as file:
     raw_json_string = file.read()
-    json_config = json.loads(raw_json_string)
+    config = json.loads(raw_json_string)
+    
+def write_config(config):
+    with open(PATH_CONFIG_JSON, 'w') as file:
+        json.dump(config, file, indent=4)
 
-'''
-class web_grabber:
-    def __init__():
-        self.url = 'https://www.facebook.com/pg/UberSingapore/posts/'
-        self.html = requests.get(self.url)
-        self.soup = bs4.BeautifulSoup(self.html.text, 'html.parser')
-        self.pbx_list = self.soup.find_all('div', {'class':'_5pbx userContent'})
-        self.p_list = []
-        for item in self.pbx_list:
-            if item.p.string is not None:
-                self.p_list.append(item.p.string)
-'''
+# CLASSES
+class Magpie_Bot:
+    '''magpie is the class for the telegram api
+    '''
+    def __init__(self):
+        self.token = config['accounts']['telegram_bot_token']
+        self.bot = telegram.Bot(token=self.token)
+        self.channel_public_link = config['accounts']['telegram_channel_public_link']
+        self.channel_id = config['accounts']['telegram_channel_id']
+        if self.channel_id == '':
+            query = self.bot.sendMessage(chat_id=self.channel_public_link, text=CHANNEL_ID_QUERY)
+            self.channel_id = query.chat.id
+            config['accounts']['telegram_channel_id'] = self.channel_id
+            write_config(config)
+
+magpie = Magpie_Bot()
