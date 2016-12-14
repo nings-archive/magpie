@@ -4,6 +4,7 @@
 
 import sys, os, logging, time, json, csv
 import telegram
+import feedparser
 import requests, bs4
 
 # LOGGING
@@ -104,6 +105,15 @@ class HTML_Update_Service:
                 self.requests_text = text
                 break
 
+class RSS_Service:
+    '''for rss, using feedparser
+    '''
+    def __init__(self, item):
+        self.url = item['url']
+        self.service_name = item['service-name']
+        self.history = item['history']
+        self.feedparser_feed = feedparser.parse(self.url)['entries'][0]['link']
+
 def main():
     magpie = Magpie_Bot()
 
@@ -132,11 +142,20 @@ def main():
                 item['history'] = flight.requests_text
                 write_config(config)
                 magpie.post_update('''
-                
 <b>{service_name}</b>
 {text_body}
                 '''.format(service_name=flight.service_name,
                            text_body=flight.requests_text))
+        if item['service'] == 'rss':
+            flight = RSS_Service(item)
+            if not flight.feedparser_feed == flight.history:
+                item['history'] = flight.feedparser_feed
+                write_config(config)
+                magpie.post_update('''
+<b>{service_name}</b>
+{link}
+                '''.format(service_name=flight.service_name,
+                    link=flight.feedparser_feed))
                 
 if __name__ == '__main__':
     main()
