@@ -18,29 +18,23 @@ CHANNEL_ID_QUERY = '{"ok":false,"error_code":401,"description":"Unauthorized"}'
 # config.json
 if not os.path.isfile(PATH_CONFIG_JSON):
     with open(PATH_CONFIG_JSON, 'w') as file:
-              file.write(
-"""{
-  "accounts":
-      {
-          "telegram_bot_token":"",
-          "telegram_channel_id":""
-      },
-  "services":
-      {
-          "site":"",
-          "url":"",
-          "selector":""
-      }
-}"""
-              )
+        json.dump(
+            {"accounts":
+                {"telegram_bot_token":"",
+                 "telegram_channel_name":"",
+                 "telegram_channel_id":""},
+             "services":
+                {"site":"",
+                 "url":""}},
+            file,
+            indent=4
+        )
 with open(PATH_CONFIG_JSON, 'r') as file:
     raw_json_string = file.read()
     json_config = json.loads(raw_json_string)
 
 '''
 class web_grabber:
-    '''Handles interactions with facebook html.
-    '''
     def __init__():
         self.url = 'https://www.facebook.com/pg/UberSingapore/posts/'
         self.html = requests.get(self.url)
