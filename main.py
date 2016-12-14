@@ -11,12 +11,13 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # CONSTANTS
-PATH = sys.path[0] + "/"
-PATH_CONFIG_JSON = PATH + "config.json"
+PATH = sys.path[0] + '/'
+PATH_CONFIG_JSON = PATH + 'config.json'
+CHANNEL_ID_QUERY = '{"ok":false,"error_code":401,"description":"Unauthorized"}'
 
 # config.json
 if not os.path.isfile(PATH_CONFIG_JSON):
-    with open(PATH_CONFIG_JSON, "w") as file:
+    with open(PATH_CONFIG_JSON, 'w') as file:
               file.write(
 """{
   "accounts":
@@ -32,10 +33,11 @@ if not os.path.isfile(PATH_CONFIG_JSON):
       }
 }"""
               )
-with open(PATH_CONFIG_JSON, "r") as file:
+with open(PATH_CONFIG_JSON, 'r') as file:
     raw_json_string = file.read()
     json_config = json.loads(raw_json_string)
 
+'''
 class web_grabber:
     '''Handles interactions with facebook html.
     '''
@@ -48,4 +50,4 @@ class web_grabber:
         for item in self.pbx_list:
             if item.p.string is not None:
                 self.p_list.append(item.p.string)
-
+'''
