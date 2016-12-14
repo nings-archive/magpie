@@ -3,7 +3,12 @@
 # Telegram: Magpie, @PicaApparatusBot  #rm-mark
 
 import sys, os, logging, time, json, csv
+import telegram
 import requests, bs4
+
+# LOGGING
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # CONSTANTS
 PATH = sys.path[0] + "/"
@@ -16,7 +21,8 @@ if not os.path.isfile(PATH_CONFIG_JSON):
 """{
   "accounts":
       {
-          "telegram":""
+          "telegram_bot_token":"",
+          "telegram_channel_id":""
       },
   "services":
       {
