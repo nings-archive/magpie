@@ -1,5 +1,5 @@
 # Magpie
-Magpie is a script that fetches shiny rocks from your favourite internet services and passes them onto you via telegram channel.
+Magpie is a script that fetches shiny stuff from your favourite internet services and passes them onto you via telegram channel.
 
 ## Dependencies
 - [python-telegram-bot, `telegram`](https://github.com/python-telegram-bot/python-telegram-bot)
