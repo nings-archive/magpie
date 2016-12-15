@@ -101,7 +101,9 @@ class HTML_Update_Service:
         self.content = self.soup.find_all(attrs=self.selector)
         for item in self.content:
             text = item.get_text()
-            if self.filt in text:
+            if self.filt == '':
+                self.requests_text = text
+            elif self.filt in text:
                 self.requests_text = text
                 break
 
