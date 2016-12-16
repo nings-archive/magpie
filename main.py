@@ -22,20 +22,36 @@ TWITCH_API_URL = 'https://api.twitch.tv/kraken/streams/'
 if not os.path.isfile(PATH_CONFIG_JSON):
     with open(PATH_CONFIG_JSON, 'w') as file:
         json.dump(
-            {"accounts": {
-                "telegram_bot_token":"",
-                "telegram_channel_public_link":"",
-                "telegram_channel_id":"",
-                "twitch_client_key":"",
-                "facebook_app_id":""
-            },
-             "services": [
-                    {
-                       "site":"",
-                       "url":""
-                    }
-                ]
-            },
+{
+    "accounts": {
+        "telegram_channel_public_link": "",
+        "telegram_channel_id": None,
+        "telegram_bot_token": "",
+        "twitch_client_id": ""
+    },
+    "services": [
+        {
+            "service-name": "",
+            "service": "twitch",
+            "history": None,
+            "channel": ""
+        },
+        {
+            "selector": {},
+            "service-name": "",
+            "filter": "",
+            "service": "html",
+            "history": "",
+            "url": ""
+        },
+        {
+            "service-name": "",
+            "service": "rss",
+            "history": "",
+            "url": ""
+        }
+    ]
+},
             file,
             indent=4
         )
@@ -120,7 +136,8 @@ def main():
     magpie = Magpie_Bot()
 
     for item in config['services']:
-        if item['service'] == 'twitch':
+        is_template = item['service-name'] == ''
+        if item['service'] == 'twitch' and not is_template:
             flight = Twitch_Service(item)
             if flight.is_streaming is not flight.history:
                 # access item['history'] instead of flight.history
@@ -138,7 +155,7 @@ def main():
                 '''.format(service_name=flight.service_name,
                     channel=flight.channel,
                     status=status_word))
-        if item['service'] == 'html':
+        if item['service'] == 'html' and not is_template:
             flight = HTML_Update_Service(item)
             if not flight.requests_text == flight.history:
                 item['history'] = flight.requests_text
@@ -148,7 +165,7 @@ def main():
 {text_body}
                 '''.format(service_name=flight.service_name,
                            text_body=flight.requests_text))
-        if item['service'] == 'rss':
+        if item['service'] == 'rss' and not is_template:
             flight = RSS_Service(item)
             if not flight.feedparser_feed == flight.history:
                 item['history'] = flight.feedparser_feed
