@@ -114,7 +114,7 @@ class HTML_Update_Service:
         self.filt = item['filter']
         self.history = item['history']
         self.soup = bs4.BeautifulSoup(requests.get(self.url).text, 'html.parser')
-        self.content = self.soup.find_all(attrs=self.selector)
+        self.content = self.soup.select(self.selector)
         for item in self.content:
             text = item.get_text()
             if self.filt == '':
