@@ -155,7 +155,7 @@ def main():
                 '''.format(service_name=flight.service_name,
                     channel=flight.channel,
                     status=status_word))
-        if item['service'] == 'html' and not is_template:
+        elif item['service'] == 'html' and not is_template:
             flight = HTML_Update_Service(item)
             if not flight.requests_text == flight.history:
                 item['history'] = flight.requests_text
@@ -165,7 +165,7 @@ def main():
 {text_body}
                 '''.format(service_name=flight.service_name,
                            text_body=flight.requests_text))
-        if item['service'] == 'rss' and not is_template:
+        elif item['service'] == 'rss' and not is_template:
             flight = RSS_Service(item)
             if not flight.feedparser_feed == flight.history:
                 item['history'] = flight.feedparser_feed
