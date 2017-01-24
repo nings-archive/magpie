@@ -62,4 +62,6 @@ class Sync:
         downloads media of file_id to dl_dir
         '''
         file_ob = self.bot.getFile(file_id)
-        file_ob.download(dl_dir)
+        file_name = file_ob.file_path
+        file_name = file_name[file_name.rfind('/')+1:]
+        file_ob.download(dl_dir+file_name)
