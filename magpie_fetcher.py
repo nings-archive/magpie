@@ -1,8 +1,9 @@
 '''
-magepie_fetcher
+magpie_fetcher
 '''
 
-import telegram, feedparser
+import json
+import feedparser, telegram, requests
 
 class Fetcher:
     def __init__(self, bot):
@@ -16,6 +17,7 @@ class Fetcher:
         self.new_update = None
         # must be assigned manually. bad?
         self.chat_id = None
+        self.twitch_client_id = None
 
     def read_rss(self, feed_config):
         '''
@@ -29,6 +31,28 @@ class Fetcher:
         # read from RSS
         feed = feedparser.parse(self.url)
         self.new_update = feed['entries'][0]['link']
+
+    def read_kraken(self, channel_config):
+        '''
+        edit instance variables to kraken response
+        channel_config: dict
+        '''
+        self.name = channel_config['NAME']
+        self.url = channel_config['URL']
+        self.last_update = channel_config['LAST_UPDATE']  # redundant
+        URL_KRAKEN = 'https://api.twitch.tv/kraken/streams/'
+        url_query = '{KRAKEN}{channel}?client_id={key}'.format(
+                KRAKEN=URL_KRAKEN,
+                channel=self.url,
+                key=self.twitch_client_id
+                )
+        json_data = json.loads(requests.get(url_query).text)
+        if json_data['stream'] is None:
+            self.new_update = False
+        else:
+            self.new_update = json_data['stream']['game']
+        
+
 
     def send(self):
         '''

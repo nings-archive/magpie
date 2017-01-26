@@ -1,5 +1,5 @@
 '''
-magpie.sync
+magpie_sync
 '''
 
 class Sync:
