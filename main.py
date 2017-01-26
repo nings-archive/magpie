@@ -1,6 +1,5 @@
 # Magpie
 # ningyuan.sg@gmail.com
-# Telegram: Magpie, @PicaApparatusBot  #rm-mark
 
 import sys, os, logging, time, json, csv
 import telegram
