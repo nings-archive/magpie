@@ -20,6 +20,15 @@ sync = magpie_sync.Sync(bot)
 
 # BOT FUNCTIONS
 def stream_status(bot, update):
+    '''
+    Send message detailing status of streams in CONFIG
+
+    ARGUMENTS
+    bot, update: required args for telegram.ext.CommandHandler
+
+    Passes each dict in list CONFIG['twitch'] to fetcher,
+    appends a line for each dict (i.e. channel) accordingly.
+    '''
     bot.send_message(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
@@ -29,7 +38,7 @@ def stream_status(bot, update):
 
     for feed in CONFIG['twitch']:
         fetcher.read_kraken(feed)
-        if fetcher.new_update is False:
+        if fetcher.new_update is None:
             # stream is offline
             status_body += '{} is offline\n'.format(
                     fetcher.name
@@ -51,6 +60,15 @@ def stream_status(bot, update):
             )
 
 def media_upload(bot, update):
+    '''
+    Uploads media file of update to specified directory in CONFIG
+
+    ARGUMENTS
+    bot, update: required args for telegram.ext.MessageHandler
+
+    Uses sync (magpie_sync.Sync) methods to download media contained
+    in update into directory specified in CONFIG['accounts']['SYNC_DIR']
+    '''
     file_id = sync.get_file_id(update)
     sync.download(file_id, CONFIG['accounts']['SYNC_DIR'])
     bot.send_message(
