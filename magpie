@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# description: runs magpie_listen.py
+#              see github.com/ningyuansg/magpie
+#              or ningyuan.sg@gmail.com
+#
+
+NAME=magpie_listen.py
+DIR=/home/pi/scripts/magpie/magpie_listen.py
+
+start() {
+	echo "Starting magpie_listen..."
+	python3 ${DIR}
+}
+
+stop() {
+	echo "Stopping magpie_listen..."
+	pkill -f ${NAME}
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	status)
+		ps aux | grep -v grep | grep ${NAME}
+		;;
+	*)
+		echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0
