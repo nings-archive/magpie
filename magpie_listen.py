@@ -29,6 +29,7 @@ def stream_status(bot, update):
     Passes each dict in list CONFIG['twitch'] to fetcher,
     appends a line for each dict (i.e. channel) accordingly.
     '''
+    CONFIG = magpie_config.load()
     bot.send_message(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
@@ -69,6 +70,7 @@ def media_upload(bot, update):
     Uses sync (magpie_sync.Sync) methods to download media contained
     in update into directory specified in CONFIG['accounts']['SYNC_DIR']
     '''
+    CONFIG = magpie_config.load()
     file_id = sync.get_file_id(update)
     sync.download(file_id, CONFIG['accounts']['SYNC_DIR'])
     bot.send_message(
