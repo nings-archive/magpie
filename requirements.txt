@@ -1,0 +1,11 @@
+# MAGPIE
+# ======
+# REQUIREMENTS
+# ------------
+# Install via,
+# $ sudo pip install -r requirements.txt
+
+requests
+pysocks
+python-telegram-bot
+feedparser
