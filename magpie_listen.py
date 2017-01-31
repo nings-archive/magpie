@@ -67,7 +67,6 @@ def stream_status(bot, update):
         status_body += line
 
     message_standby.edit_text(
-            chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,
             text=status_body
             )
@@ -91,7 +90,6 @@ def media_upload(bot, update):
     file_id = sync.get_file_id(update)
     sync.download(file_id, CONFIG['accounts']['SYNC_DIR'])
     message_standby.edit_text(
-            chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
             text='File uploaded!'
     )
