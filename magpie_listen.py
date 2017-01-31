@@ -29,32 +29,44 @@ def stream_status(bot, update):
     Passes each dict in list CONFIG['twitch'] to fetcher,
     appends a line for each dict (i.e. channel) accordingly.
     '''
+    # Load config, send standby message
     CONFIG = magpie_config.load()
-    bot.send_message(
+    message_standby = bot.send_message(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
             text='Standby...'
             )
-    status_body = '<b>Twitch Streams</b>\n'
 
+    stream_status = {
+            'offline': [],
+            'online' : []
+    }
+
+    # Check feeds, stash in stream_status dict, update CONFIG, config.json
     for feed in CONFIG['twitch']:
         fetcher.read_kraken(feed)
         if fetcher.new_update is None:
             # stream is offline
-            status_body += '{} is offline\n'.format(
+            stream_status['offline'].append('{} is offline\n'.format(
                     fetcher.name
-            )
+            ))
         else:
             # stream is online
-            status_body += '{} is online with <i>{}</i>\n'.format(
+            stream_status['online'].append('{} is online with <i>{}</i>\n'.format(
                     fetcher.name,
                     fetcher.new_update
-            )
-
+            ))
         feed['LAST_UPDATE'] = fetcher.new_update  # redun.
     magpie_config.save(CONFIG) # redun.
 
-    bot.send_message(
+    # Build body text (onlines first, then offlines)
+    status_body = '<b>Twitch Streams</b>\n'
+    for line in stream_status['online']:
+        status_body += line
+    for line in stream_status['offline']:
+        status_body += line
+
+    message_standby.edit_text(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,
             text=status_body
@@ -70,10 +82,15 @@ def media_upload(bot, update):
     Uses sync (magpie_sync.Sync) methods to download media contained
     in update into directory specified in CONFIG['accounts']['SYNC_DIR']
     '''
+    message_standby = bot.send_message(
+            chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
+            parse_mode=telegram.ParseMode.HTML,  # redun.
+            text='Standby...'
+    )
     CONFIG = magpie_config.load()
     file_id = sync.get_file_id(update)
     sync.download(file_id, CONFIG['accounts']['SYNC_DIR'])
-    bot.send_message(
+    message_standby.edit_text(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
             text='File uploaded!'
