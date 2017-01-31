@@ -81,12 +81,12 @@ def media_upload(bot, update):
     Uses sync (magpie_sync.Sync) methods to download media contained
     in update into directory specified in CONFIG['accounts']['SYNC_DIR']
     '''
+    CONFIG = magpie_config.load()
     message_standby = bot.send_message(
             chat_id=CONFIG['accounts']['TELEGRAM_CHAT_ID'],
             parse_mode=telegram.ParseMode.HTML,  # redun.
             text='Standby...'
     )
-    CONFIG = magpie_config.load()
     file_id = sync.get_file_id(update)
     sync.download(file_id, CONFIG['accounts']['SYNC_DIR'])
     message_standby.edit_text(
