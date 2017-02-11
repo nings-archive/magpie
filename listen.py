@@ -11,6 +11,7 @@ twitch  = magpie.twitch.Twitch()
 updater = telegram.ext.Updater(bot=core.bot)
 
 # BOT FUNCTIONS
+# im sure theres some way to DRY the chat_id authentication
 def command_help(bot, update):
     this_chat_id = update.message.chat_id
     if core.is_my_chat_id(this_chat_id):
@@ -31,11 +32,31 @@ def command_streams(bot, update):
     else:
         core.send_me('<b>{} ATTEMPTED TO USE BOT</b>'.format(this_chat_id))
 
-help_handler = telegram.ext.CommandHandler('help', command_help)
-updater.dispatcher.add_handler(help_handler)
+def command_streamson(bot, update):
+    this_chat_id = update.message.chat_id
+    if core.is_my_chat_id(this_chat_id):
+        twitch.toggle_realtime(True)
+        twitch.send_toggle_state()
+    else:
+        core.send_me('<b>{} ATTEMPTED TO USE BOT</b>'.format(this_chat_id))
 
-streams_handler = telegram.ext.CommandHandler('streams', command_streams)
+def command_streamsoff(bot, update):
+    this_chat_id = update.message.chat_id
+    if core.is_my_chat_id(this_chat_id):
+        twitch.toggle_realtime(False)
+        twitch.send_toggle_state()
+    else:
+        core.send_me('<b>{} ATTEMPTED TO USE BOT</b>'.format(this_chat_id))
+
+# HANDLER/DISPATCHER
+help_handler       = telegram.ext.CommandHandler('help', command_help)
+streams_handler    = telegram.ext.CommandHandler('streams', command_streams)
+streamson_handler  = telegram.ext.CommandHandler('streamson', command_streamson)
+streamsoff_handler = telegram.ext.CommandHandler('streamsoff', command_streamsoff)
+updater.dispatcher.add_handler(help_handler)
 updater.dispatcher.add_handler(streams_handler)
+updater.dispatcher.add_handler(streamson_handler)
+updater.dispatcher.add_handler(streamsoff_handler)
 
 updater.start_polling()
 

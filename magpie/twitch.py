@@ -14,6 +14,16 @@ class Twitch(magpie.core.Core):
         self.client_id = self.config['twitch']['client_id']
         self.following = self.config['twitch']['following']
 
+    def toggle_realtime(self, toggle_to):
+        self.config['twitch']['realtime'] = toggle_to
+        Twitch.save_config(self.config)
+
+    def send_toggle_state(self):
+        if self.config['twitch']['realtime'] is True:
+            self.send_me('Realtime Twitch Updates: <b>ON</b>')
+        else:
+            self.send_me('Realtime Twitch Updates: <b>OFF</b>')
+
     def send_updates(self):
         standby_message = self.send_me('Standby...')
         standby_message.edit_text(self.build_updates(), parse_mode=telegram.ParseMode.HTML)
