@@ -13,16 +13,25 @@ class Twitch(magpie.core.Core):
         magpie.core.Core.__init__(self)
         self.client_id = self.config['twitch']['client_id']
         self.following = self.config['twitch']['following']
+        self.realtime_enabled = self.config['twitch']['realtime']
 
     def toggle_realtime(self, toggle_to):
         self.config['twitch']['realtime'] = toggle_to
         Twitch.save_config(self.config)
+        self.__init__()
 
     def send_toggle_state(self):
         if self.config['twitch']['realtime'] is True:
             self.send_me('Realtime Twitch Updates: <b>ON</b>')
         else:
             self.send_me('Realtime Twitch Updates: <b>OFF</b>')
+
+    def send_new_updates(self):
+        for channel in self.following:
+            this_update = self.retrieve_update(channel['channel_name'])
+            if this_update != channel['last_update']:
+                status = self.build_update(channel)
+                self.send_me(status)
 
     def send_all_updates(self):
         standby_message = self.send_me('Standby...')

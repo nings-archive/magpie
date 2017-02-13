@@ -28,6 +28,7 @@ def command_help(bot, update):
 def command_streams(bot, update):
     this_chat_id = update.message.chat_id
     if core.is_my_chat_id(this_chat_id):
+        twitch.__init__()
         twitch.send_all_updates()
     else:
         core.send_me('<b>{} ATTEMPTED TO USE BOT</b>'.format(this_chat_id))
@@ -35,6 +36,7 @@ def command_streams(bot, update):
 def command_streamson(bot, update):
     this_chat_id = update.message.chat_id
     if core.is_my_chat_id(this_chat_id):
+        twitch.__init__()
         twitch.toggle_realtime(True)
         twitch.send_toggle_state()
     else:
@@ -43,6 +45,7 @@ def command_streamson(bot, update):
 def command_streamsoff(bot, update):
     this_chat_id = update.message.chat_id
     if core.is_my_chat_id(this_chat_id):
+        twitch.__init__()
         twitch.toggle_realtime(False)
         twitch.send_toggle_state()
     else:
