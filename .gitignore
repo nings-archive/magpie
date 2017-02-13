@@ -1,2 +1,5 @@
 .*
 *~
+old.*
+config.json
+*pycache*
