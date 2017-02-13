@@ -24,11 +24,11 @@ class Twitch(magpie.core.Core):
         else:
             self.send_me('Realtime Twitch Updates: <b>OFF</b>')
 
-    def send_updates(self):
+    def send_all_updates(self):
         standby_message = self.send_me('Standby...')
-        standby_message.edit_text(self.build_updates(), parse_mode=telegram.ParseMode.HTML)
+        standby_message.edit_text(self.build_all_updates(), parse_mode=telegram.ParseMode.HTML)
 
-    def build_updates(self):
+    def build_all_updates(self):
         statuses = {'online': [], 'offline': []}
         for channel in self.following:
             status = self.build_update(channel)
