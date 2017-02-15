@@ -18,10 +18,15 @@ config.json
     |            + str: url
     |            + str: last_update
     +--dict: twitch
-           + str: client_id
-           + bool: realtime
-           + list: following
-                 + str: streamer
-                 + str: channel_name
-                 + str/None: game
+    |      + str: client_id
+    |      + bool: realtime
+    |      + list: following
+    |            + str: streamer
+    |            + str: channel_name
+    |            + str/None: game
+    +--dict: dota2
+           + str: api_key
+           + str: steam_id
+           + list: all_hero_ids
+                 + int: hero_id
 ```
