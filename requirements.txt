@@ -9,3 +9,4 @@ requests
 pysocks
 python-telegram-bot
 feedparser
+dota2api
