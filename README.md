@@ -27,6 +27,5 @@ config.json
     +--dict: dota2
            + str: api_key
            + str: steam_id
-           + list: all_hero_ids
-                 + int: hero_id
+           + str: last_match
 ```
