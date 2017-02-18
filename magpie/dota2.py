@@ -33,10 +33,7 @@ class Dota2(magpie.core.Core):
         my_team     = self.my_team(player_json)
         my_duration = self.my_game_duration(match_json)
         radiant_win = self.my_game_radiant_win(match_json)
-        if my_team == 'radiant' and radiant_win:
-            my_win = 'Game Won'
-        else:
-            my_win = 'Game Lost'
+        my_win      = self.my_win_or_lose(my_team, radiant_win)
         return '''
 <b>{hero} [{kda}]</b>
 {time} - {winloss}
@@ -51,6 +48,14 @@ class Dota2(magpie.core.Core):
         minutes = time_in_s // 60
         seconds = time_in_s % 60
         return '{}:{}'.format(minutes, seconds)
+
+    def my_win_or_lose(self, my_team, radiant_win):
+        if my_team == 'radiant' and radiant_win:
+            return 'Game Won'
+        elif my_team == 'dire' and not radiant_win:
+            return 'Game Won'
+        else:
+            return 'Game Lost'
 
     def my_kda(self, player_json):
         return player_json['kills'], player_json['deaths'], player_json['assists']
