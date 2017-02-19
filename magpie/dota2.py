@@ -45,8 +45,15 @@ class Dota2(magpie.core.Core):
 
     @staticmethod
     def format_time(time_in_s):
+		'''
+		int:time_in_s -> str:formatted_time
+		'''
         minutes = time_in_s // 60
         seconds = time_in_s % 60
+		# following fixes single digit seconds e.g. 32m2s -> 32:2
+		seconds = str(seconds)
+		if len(seconds) == 1:
+			seconds = '0' + seconds
         return '{}:{}'.format(minutes, seconds)
 
     def my_win_or_lose(self, my_team, radiant_win):
