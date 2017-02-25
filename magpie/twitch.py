@@ -1,4 +1,4 @@
-import json
+import json, threading, queue
 import requests, telegram
 import magpie.core
 
@@ -33,9 +33,47 @@ class Twitch(magpie.core.Core):
                 status = self.build_update(channel)
                 self.send_me(status)
 
+    def mt_send_all_updates(self):
+        standby_message = self.send_me('Standby...')
+        standby_message.edit_text(self.mt_build_all_updates(), parse_mode=telegram.ParseMode.HTML)
+
     def send_all_updates(self):
         standby_message = self.send_me('Standby...')
         standby_message.edit_text(self.build_all_updates(), parse_mode=telegram.ParseMode.HTML)
+
+    def mt_build_all_updates(self):
+        statuses = {'online': [], 'offline': []}
+        channel_queue = queue.Queue()
+        for channel in self.following:
+            channel_queue.put(channel)
+        lock = threading.Lock()
+
+        def mt_build_updates(q):
+            while not q.empty():
+                channel = q.get()
+                status = self.build_update(channel)
+                with lock:
+                    if 'offline' in status:
+                        statuses['offline'].append(status)
+                    else:
+                        statuses['online'].append(status)
+
+        threads = []
+
+        for _ in range(channel_queue.qsize()):
+            worker = threading.Thread(target=mt_build_updates, args=(channel_queue,))
+            threads.append(worker)
+            worker.start()
+
+        for thread in threads:
+            thread.join()
+
+        updates_body = '<b>Twitch Streams</b>\n'
+        for status in statuses['online']:
+            updates_body += status
+        for status in statuses['offline']:
+            updates_body += status
+        return updates_body
 
     def build_all_updates(self):
         statuses = {'online': [], 'offline': []}
