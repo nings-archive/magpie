@@ -7,6 +7,7 @@ class Dota2(magpie.core.Core):
     It inherits from the class Core.
     '''
     DOTABUFF_ADDRESS = 'https://www.dotabuff.com/matches/{}'
+    OPENDOTA_ADDRESS = 'http://www.opendota.com/matches/{}'
     RADIANT_SLOTS = {'0', '1', '2', '3', '4'}
     DIRE_SLOTS    = {'128', '129', '130', '131', '132'}
 
@@ -37,11 +38,13 @@ class Dota2(magpie.core.Core):
         return '''
 <b>{hero} [{kda}]</b>
 {time} - {winloss}
-{url}
+{dotabuff}
+{opendota}
 '''.format(hero=my_hero[1], kda=my_kda_f,
         time=self.format_time(my_duration),
         winloss=my_win,
-        url=self.DOTABUFF_ADDRESS.format(match_id))
+        dotabuff=self.DOTABUFF_ADDRESS.format(match_id),
+        opendota=self.OPENDOTA_ADDRESS.format(match_id))
 
     @staticmethod
     def format_time(time_in_s):
