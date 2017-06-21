@@ -14,11 +14,14 @@ class Rss(magpie.core.Core):
 
     def send_new_updates(self):
         for feed in self.following:
-            this_update = self.retrieve_update(feed['url'])
-            if this_update != feed['last_update']:
-                feed['last_update'] = this_update
-                self.save_config(self.config)
-                self.send_me(self.build_update(feed))
+            try:
+                this_update = self.retrieve_update(feed['url'])
+                if this_update != feed['last_update']:
+                    feed['last_update'] = this_update
+                    self.save_config(self.config)
+                    self.send_me(self.build_update(feed))
+            except IndexError:
+                pass
 
     def build_update(self, feed):
         return self.update_body.format(feed['name'], feed['last_update'])
