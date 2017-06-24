@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import telegram, telegram.ext
 import magpie.core, magpie.twitch
 

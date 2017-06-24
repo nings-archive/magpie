@@ -1,4 +1,4 @@
-import sys, json
+import os, json
 import telegram
 
 class Core:
@@ -6,7 +6,7 @@ class Core:
     Core handles all interactions with python-telegram-bot, and the system.
     Other modules will inherit from this class.
     '''
-    PATH_TO_CONFIG = sys.path[0] + '/config.json'
+    PATH_TO_CONFIG = os.path.expanduser('~/.magpie/config.json')
 
     def __init__(self):
         self.config = Core.load_config()
