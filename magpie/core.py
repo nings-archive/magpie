@@ -22,6 +22,12 @@ class Core:
             text=text
         )
 
+    def send_document(self, document_path):
+        return self.bot.send_document(
+            chat_id=self.chat_id,
+            document=open(document_path, 'rb')
+        )
+
     def is_my_chat_id(self, this_chat_id):
         if str(this_chat_id) == str(self.chat_id):
             return True
