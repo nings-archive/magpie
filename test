@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+test_modules=( $(ls tests/*.py) )
+python3 -m unittest "${test_modules}"
