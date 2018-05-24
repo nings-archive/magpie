@@ -10,4 +10,5 @@ config.read('config.ini')
 bot = core.Bot(
     token=config['telegram']['token'], 
     admin_id=config['telegram']['admin_id'])
+bot.listen()
 bot.send_admin('<code>Poo-tee-weet?</code>')

@@ -1,12 +1,17 @@
 import logging
 import telegram, telegram.ext
 
-CommandHandler = telegram.ext.CommandHandler
+import services.os
 
 class Bot(telegram.ext.Updater):
     def __init__(self, *, token, admin_id):
-        telegram.ext.Updater.__init__(self, token=token)
         self.admin_id = admin_id
+        telegram.ext.Updater.__init__(self, token=token)
+        self.dispatcher.add_handler(*services.os.commands)
+
+    def listen(self):
+        self.start_polling()
+        self.idle()
 
     def send_admin(self, text):
         return self.bot.send_message(

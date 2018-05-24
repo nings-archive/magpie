@@ -1,4 +1,8 @@
 #! /usr/bin/env bash
 
-test_modules=( $(ls tests/*.py) )
-python3 -m unittest "${test_modules}"
+test_modules=( $(ls tests/*.py tests/**/*.py) )
+
+echo 'Running tests for...'
+printf '\t%s\n' "${test_modules[@]}"
+
+PYTHONPATH=$PYTHONPATH:`pwd`/magpie python3 -m unittest "${test_modules[@]}"
